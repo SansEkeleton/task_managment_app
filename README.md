@@ -45,3 +45,11 @@ Ensure devices is available to run the app
 ```bash
 flutter run
 ```
+# Features 
+
+- Task Management:
+Create, edit and delete tasks
+
+- Filters and Search:
+Filters by:
+ Status (Completed, Pending)
