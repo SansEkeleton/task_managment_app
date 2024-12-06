@@ -12,6 +12,8 @@ class TasksBloc extends HydratedBloc<TasksEvent, TasksState> {
     on<UpdateTask>(_onUpdateTask);
     on<DeleteTask>(_onDeleteTask);
     on<RemoveTasks>(_onRemoveTask);
+    on<EditTask>(_onEditTask);
+    on<MarkFavoriteOrUnfavoriteTask>(_onMarkFavoriteOrUnfavoriteTask);
 
   }
 
@@ -66,6 +68,92 @@ class TasksBloc extends HydratedBloc<TasksEvent, TasksState> {
       removeTasks: List.from(state.removeTasks)..add(event.task.copyWith(isDeleted: true))
     ));
   }
+
+ void _onMarkFavoriteOrUnfavoriteTask(
+    MarkFavoriteOrUnfavoriteTask event, Emitter<TasksState> emit) {
+  final state = this.state;
+
+  // Copias inmutables de las listas
+  final pendingTasks = List<Task>.from(state.pendingTasks);
+  final completeTasks = List<Task>.from(state.completeTasks);
+  final favoriteTasks = List<Task>.from(state.favoriteTasks);
+
+  // La tarea a modificar
+  final task = event.task;
+
+  // Determina si la tarea está completada o pendiente
+  if (!task.isDone!) {
+    // Si está en las tareas pendientes
+    final taskIndex = pendingTasks.indexOf(task);
+    if (taskIndex != -1) {
+      // Marca como favorita o quita el favorito
+      final updatedTask = task.copyWith(isFavorite: !task.isFavorite!);
+      pendingTasks[taskIndex] = updatedTask;
+
+      // Actualiza la lista de favoritos
+      if (updatedTask.isFavorite!) {
+        favoriteTasks.insert(0, updatedTask);
+      } else {
+        favoriteTasks.removeWhere((t) => t.id == task.id);
+      }
+    }
+  } else {
+    // Si está en las tareas completadas
+    final taskIndex = completeTasks.indexOf(task);
+    if (taskIndex != -1) {
+      // Marca como favorita o quita el favorito
+      final updatedTask = task.copyWith(isFavorite: !task.isFavorite!);
+      completeTasks[taskIndex] = updatedTask;
+
+      // Actualiza la lista de favoritos
+      if (updatedTask.isFavorite!) {
+        favoriteTasks.insert(0, updatedTask);
+      } else {
+        favoriteTasks.removeWhere((t) => t.id == task.id);
+      }
+    }
+  }
+
+  
+  emit(
+    TasksState(
+      pendingTasks: pendingTasks,
+      completeTasks: completeTasks,
+      favoriteTasks: favoriteTasks,
+      removeTasks: List<Task>.from(state.removeTasks),
+    ),
+  );
+}
+
+ void _onEditTask(EditTask event, Emitter<TasksState> emit) {
+  final state = this.state;
+
+  final pendingTasks = List<Task>.from(state.pendingTasks);
+  final completeTasks = List<Task>.from(state.completeTasks);
+  final favoriteTasks = List<Task>.from(state.favoriteTasks);
+
+  pendingTasks.remove(event.oldTask);
+  completeTasks.remove(event.oldTask);
+  favoriteTasks.remove(event.oldTask);
+
+  if (!event.newTask.isDone!) {
+    pendingTasks.insert(0, event.newTask); 
+  } else {
+    completeTasks.insert(0, event.newTask); 
+  }
+
+  if (event.newTask.isFavorite!) {
+    favoriteTasks.insert(0, event.newTask);
+  }
+  emit(
+    TasksState(
+      pendingTasks: pendingTasks,
+      completeTasks: completeTasks,
+      favoriteTasks: favoriteTasks,
+      removeTasks: List.from(state.removeTasks),
+    ),
+  );
+}
   
   @override
   TasksState? fromJson(Map<String, dynamic> json) {

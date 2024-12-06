@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: 'task managment',
             debugShowCheckedModeBanner: false,
-            theme: state.switchValue? AppThemes.appThemeData[AppTheme.lightTheme]:
+            theme: state.switchValue? AppThemes.appThemeData[AppTheme.darkTheme]:
             AppThemes.appThemeData[AppTheme.darkTheme],
             home: const TabsPage(),
             onGenerateRoute: appRouter.onGenerateRoute,

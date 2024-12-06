@@ -24,6 +24,7 @@ class _TabsPageState extends State<TabsPage> {
   void _addTask(BuildContext context){
     showModalBottomSheet(
       context: context, 
+      isScrollControlled: true,
       builder: (context) => SingleChildScrollView(
         child: Container(padding: EdgeInsets.only(bottom: 
         MediaQuery.of(context).viewInsets.bottom),

@@ -16,7 +16,7 @@ class AppThemes {
       ),
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.all(Colors.white),
+          foregroundColor: WidgetStateProperty.all(Colors.white),
         ),
       ),
       textTheme: const TextTheme(
@@ -31,7 +31,7 @@ class AppThemes {
         primarySwatch: Colors.grey,
         brightness: Brightness.dark, // Coincide con ThemeData.brightness
       ).copyWith(
-        background: const Color(0xFF212121),
+        surface: const Color(0xFF212121),
       ),
     ),
 
@@ -45,7 +45,7 @@ class AppThemes {
       ),
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.all(Colors.black),
+          foregroundColor: WidgetStateProperty.all(Colors.black),
         ),
       ),
       textTheme: const TextTheme(
@@ -61,7 +61,7 @@ class AppThemes {
         primarySwatch: Colors.grey,
         brightness: Brightness.light, // Coincide con ThemeData.brightness
       ).copyWith(
-        background: const Color(0xFFE5E5E5),
+        surface: const Color(0xFFE5E5E5),
       ),
     ),
   };
